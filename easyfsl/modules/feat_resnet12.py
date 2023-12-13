@@ -76,9 +76,9 @@ class FEATResNet12(nn.Module):
         super().__init__()
 
         channels = [64, 160, 320]
-        self.layer_dims = [
-            channels[i] * block.expansion for i in range(4) for j in range(4)
-        ]
+        # self.layer_dims = [
+        #     channels[i] * block.expansion for i in range(2) for j in range(2) 
+        # ]
 
         self.layer1 = self._make_layer(
             block,
@@ -163,4 +163,5 @@ def feat_resnet12(**kwargs):
         The standard ResNet12 from FEAT model.
     """
     return FEATResNet12(FEATBasicBlock, **kwargs)
+
 
