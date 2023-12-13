@@ -26,12 +26,13 @@ class FEATBasicBlock(nn.Module):
         super().__init__()
         self.conv1 = conv3x3(inplanes, planes)
         self.bn1 = nn.BatchNorm2d(planes)
+        self.dropout1 = nn.Dropout(p=0.5)
         self.relu = nn.LeakyReLU(0.1)
         self.conv2 = conv3x3(planes, planes)
         self.bn2 = nn.BatchNorm2d(planes)
-        self.conv3 = conv3x3(planes, planes)
-        self.bn3 = nn.BatchNorm2d(planes)
-        self.maxpool = nn.MaxPool2d(stride)
+        self.dropout2 = nn.Dropout(p=0.5)
+
+        
         self.downsample = downsample
 
     def forward(self, x):  # pylint: disable=invalid-name
@@ -43,16 +44,14 @@ class FEATBasicBlock(nn.Module):
 
         out = self.conv1(x)
         out = self.bn1(out)
+        out = self.dropout1(out)
 
         out = self.relu(out)
 
         out = self.conv2(out)
         out = self.bn2(out)
+        out = self.dropout2(out)
 
-        out = self.relu(out)
-
-        out = self.conv3(out)
-        out = self.bn3(out)
 
         if self.downsample is not None:
             residual = self.downsample(x)
@@ -76,7 +75,7 @@ class FEATResNet12(nn.Module):
         self.inplanes = 3
         super().__init__()
 
-        channels = [64, 160, 320, 640]
+        channels = [64, 160, 320]
         self.layer_dims = [
             channels[i] * block.expansion for i in range(4) for j in range(4)
         ]
@@ -94,11 +93,6 @@ class FEATResNet12(nn.Module):
         self.layer3 = self._make_layer(
             block,
             320,
-            stride=2,
-        )
-        self.layer4 = self._make_layer(
-            block,
-            640,
             stride=2,
         )
 
@@ -142,7 +136,7 @@ class FEATResNet12(nn.Module):
         """
         Iterate over the blocks and apply them sequentially.
         """
-        x = self.layer4(self.layer3(self.layer2(self.layer1(x))))
+        x = self.layer3(self.layer2(self.layer1(x)))
         return x.mean((-2, -1))
 
 
@@ -169,3 +163,4 @@ def feat_resnet12(**kwargs):
         The standard ResNet12 from FEAT model.
     """
     return FEATResNet12(FEATBasicBlock, **kwargs)
+
