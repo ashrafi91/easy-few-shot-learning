@@ -72,7 +72,7 @@ class FEATResNet12(nn.Module):
         self,
         block=FEATBasicBlock,
     ):
-        self.inplanes = 2
+        self.inplanes = 3
         super().__init__()
 
         channels = [64, 160, 320]
