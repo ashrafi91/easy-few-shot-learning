@@ -72,12 +72,12 @@ class FEATResNet12(nn.Module):
         self,
         block=FEATBasicBlock,
     ):
-        self.inplanes = 3
+        self.inplanes = 2
         super().__init__()
 
         channels = [64, 160, 320]
         self.layer_dims = [
-            channels[i] * block.expansion for i in range(4) for j in range(4)
+            channels[i] * block.expansion for i in range(3) for j in range(3)
         ]
 
         self.layer1 = self._make_layer(
