@@ -31,7 +31,7 @@ class FEATBasicBlock(nn.Module):
         self.conv2 = conv3x3(planes, planes)
         self.bn2 = nn.BatchNorm2d(planes)
         self.dropout2 = nn.Dropout(p=0.5)
-
+        self.maxpool = nn.MaxPool2d(stride)
         
         self.downsample = downsample
 
