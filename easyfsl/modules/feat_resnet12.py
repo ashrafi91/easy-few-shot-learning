@@ -280,7 +280,6 @@ class FEATResNet12(nn.Module):
         """
         Iterate over the blocks and apply them sequentially.
         """
-        x = self.stn(x)
         x = self.layer3(self.layer2(self.layer1(x)))
         return x.mean((-2, -1))
 
